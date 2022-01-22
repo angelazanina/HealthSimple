@@ -33,31 +33,48 @@ def get_info():
     if (Activity.get() ==True):
         ctgrs_l.append("Activity")
     get_ctgry = ctgrs_l
-    get_msg = msg.get()
     get_time = var.get()
     
     #input validation
-    if ctgrs_l == [] or get_msg == "" or get_time ==0:
+    if ctgrs_l == [] or get_time ==0:
         messagebox.showerror("Oops!", "Looks like we're missing some info.")
     else:
         time_sec = get_time*60
         messagebox.showinfo("Notification set", "Confirm notification?")
-        
-        #time.sleep can be problematic in a while loop
-        time.sleep(time_sec)
-        
-        #adding to history file
-        joined_ctgrs = ",".join(ctgrs_l)
-        history_fo.write(joined_ctgrs+","+get_msg+","+str(get_time)+"\n")
 
+        joined_ctgrs = ",".join(ctgrs_l)
+        history_fo.write(joined_ctgrs+","+str(get_time)+"\n")
+
+        MotivationTimeInterval = time_sec
+        ActivityTimeInterval = 1800
+        HydrationTimeInterval = 1200
+
+        TimeReset = time.time()
+        end = FALSE
         
-        #we can add logo too!!
-        notification.notify(title=ctgrs_l[0],
-                            message=get_msg,
-                            app_name="HealthSimple",
-                            timeout=20)
+        MotivationTimeEnd = MotivationTimeInterval + TimeReset
+        ActivityTimeEnd = ActivityTimeInterval + TimeReset
+        HydrationTimeEnd = HydrationTimeInterval + TimeReset
+
+        if time.time() > MotivationTimeEnd :
+            notification.notify(
+                title = 'Motivation', message = 'You Got This!', timeout = 20
+                )
+            MotivationTimeEnd = MotivationTimeInterval + time.time()
+
+        if time.time() > ActivityTimeEnd :
+            notification.notify(
+                title = 'Activity', message = 'Get Up and Walk/Stretch', timeout = 20
+                )
+            ActivityTimeEnd = ActivityTimeInterval + time.time()
+
+        if time.time() > HydrationTimeEnd :
+            notification.notify(
+                title = 'Hydration', message = 'Drink Some Water', timeout = 20, app_icon = 'water.ico'
+                )
+            HydrationTimeEnd = HydrationTimeEnd + time.time()
+                
         
-        history_fo.close()
 
 #def open_history():
     
@@ -83,7 +100,17 @@ ctgry_label.place(x=20, y=25)
 #entry1 - **instead of Entry object, make drop down menu?**
 #Entry widget accepts single line text strings from user
 #category = Entry(widget, width="25", font=("poppins",10))
-mb=  Menubutton ( widget, text="CheckComboBox", relief=RAISED)
+def change_text():
+    l = []
+    if (Motivation.get() == True):
+        l.append("Motivation")
+    if (Activity.get() == True):
+        l.append("Activity")
+    if (Water.get() == True):
+        l.append("Water")
+    joined_l = ", ".join(l)
+    msg['text'] = joined_l
+mb=  Menubutton ( widget, text="Categories", relief=RAISED)
 mb.place(x=123, y=25)
 mb.menu  =  Menu ( mb, tearoff = 0 )
 mb["menu"]  =  mb.menu
@@ -92,17 +119,17 @@ Motivation = IntVar()
 Water = IntVar()
 Activity = IntVar()
 
-mb.menu.add_checkbutton ( label="Motivation", variable=Motivation)
-mb.menu.add_checkbutton ( label="Water", variable=Water)
-mb.menu.add_checkbutton ( label="Activity", variable=Activity)
+mb.menu.add_checkbutton ( label="Motivation", variable=Motivation, command = change_text)
+mb.menu.add_checkbutton ( label="Water", variable=Water, command = change_text)
+mb.menu.add_checkbutton ( label="Activity", variable=Activity, command = change_text)
 
 
 #label2
-msg_label = Label(widget, text="Display Message", font=("poppins", 10, 'bold'))
+msg_label = Label(widget, text="Categories Chosen", font=("poppins", 10, 'bold'))
 msg_label.place(x=20, y=80)
 
 #entry2
-msg = Entry(widget, width="25", font=("poppins", 10))
+msg = Label(widget, font=("poppins", 10), text = '')
 msg.place(x=170, y=77, height=30)
 
 #label3
@@ -113,12 +140,12 @@ time_label.place(x=20, y=135)
 def change(var):
     time1 = int(var)
 var = DoubleVar()
-time1_slider = Scale(widget, from_=0, to=120, orient = HORIZONTAL, command=change, variable=var) 
+time1_slider = Scale(widget, from_=0, to=120, orient = HORIZONTAL, length = 150, command=change, variable=var) 
 time1_slider.place(x=90, y=120)
 
 #label4
 time_min_label = Label(widget, text="mins", font=("poppins", 10))
-time_min_label.place(x=200, y=135)
+time_min_label.place(x=250, y=135)
 
 #creating the notif button
 #fg - color to render text
