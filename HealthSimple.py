@@ -58,6 +58,7 @@ def get_info():
 widget = Tk()
 widget.title("HealthSimple")
 widget.geometry("550x350")
+print('sup')
 
 #root = Tk()
 
