@@ -25,12 +25,19 @@ def get_info():
     history_fo = open("notif_history.txt", "a")
     
     #getting the user input
-    get_ctgry = category.get()
+    ctgrs_l = []
+    if (Motivation.get() == True):
+        ctgrs_l.append("Motivation")
+    if (Water.get() ==True):
+        ctgrs_l.append("Water")
+    if (Activity.get() ==True):
+        ctgrs_l.append("Activity")
+    get_ctgry = ctgrs_l
     get_msg = msg.get()
     get_time = var.get()
     
     #input validation
-    if get_ctgry =="" or get_msg == "" or get_time =="":
+    if ctgrs_l == [] or get_msg == "" or get_time ==0:
         messagebox.showerror("Oops!", "Looks like we're missing some info.")
     else:
         time_sec = get_time*60
@@ -40,11 +47,12 @@ def get_info():
         time.sleep(time_sec)
         
         #adding to history file
-        history_fo.write(get_ctgry+","+get_msg+","+str(get_time)+"\n")
+        joined_ctgrs = ",".join(ctgrs_l)
+        history_fo.write(joined_ctgrs+","+get_msg+","+str(get_time)+"\n")
 
         
         #we can add logo too!!
-        notification.notify(title=get_ctgry,
+        notification.notify(title=ctgrs_l[0],
                             message=get_msg,
                             app_name="HealthSimple",
                             timeout=20)
@@ -74,8 +82,20 @@ ctgry_label.place(x=20, y=25)
 
 #entry1 - **instead of Entry object, make drop down menu?**
 #Entry widget accepts single line text strings from user
-category = Entry(widget, width="25", font=("poppins",10))
-category.place(x=123, y=25)
+#category = Entry(widget, width="25", font=("poppins",10))
+mb=  Menubutton ( widget, text="CheckComboBox", relief=RAISED)
+mb.place(x=123, y=25)
+mb.menu  =  Menu ( mb, tearoff = 0 )
+mb["menu"]  =  mb.menu
+
+Motivation = IntVar()
+Water = IntVar()
+Activity = IntVar()
+
+mb.menu.add_checkbutton ( label="Motivation", variable=Motivation)
+mb.menu.add_checkbutton ( label="Water", variable=Water)
+mb.menu.add_checkbutton ( label="Activity", variable=Activity)
+
 
 #label2
 msg_label = Label(widget, text="Display Message", font=("poppins", 10, 'bold'))
@@ -95,7 +115,6 @@ def change(var):
 var = DoubleVar()
 time1_slider = Scale(widget, from_=0, to=120, orient = HORIZONTAL, command=change, variable=var) 
 time1_slider.place(x=90, y=120)
-
 
 #label4
 time_min_label = Label(widget, text="mins", font=("poppins", 10))
