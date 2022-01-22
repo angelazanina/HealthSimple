@@ -27,20 +27,21 @@ def get_info():
     #getting the user input
     get_ctgry = category.get()
     get_msg = msg.get()
-    get_time = time1.get()
+    get_time = var.get()
+    print(get_time)
     
     #input validation
     if get_ctgry =="" or get_msg == "" or get_time =="":
         messagebox.showerror("Oops!", "Looks like we're missing some info.")
     else:
-        time_sec = int(float(get_time)*60)
+        time_sec = get_time*60
         messagebox.showinfo("Notification set", "Confirm notification?")
         
         #time.sleep can be problematic in a while loop
         time.sleep(time_sec)
         
         #adding to history file
-        history_fo.write(get_ctgry+","+get_msg+","+get_time+"\n")
+        history_fo.write(get_ctgry+","+get_msg+","+str(get_time)+"\n")
 
         
         #we can add logo too!!
@@ -58,6 +59,8 @@ def get_info():
 widget = Tk()
 widget.title("HealthSimple")
 widget.geometry("550x350")
+
+#root = Tk()
 
 logo = Image.open("Panda.png")
 tkLogo = ImageTk.PhotoImage(logo)  #making tkinter compatible photo
@@ -88,12 +91,17 @@ time_label = Label(widget, text="Set Time", font=("poppins", 10, 'bold'))
 time_label.place(x=20, y=135)
 
 #entry3
-time1 = Entry(widget, width="5", font=("poppins", 10))
-time1.place(x=115, y=133)
+#time1 = Entry(widget, width="5", font=("poppins", 10))
+def change(var):
+    time1 = int(var)
+var = DoubleVar()
+time1_slider = Scale(widget, from_=0, to=120, orient = HORIZONTAL, command=change, variable=var) 
+time1_slider.place(x=90, y=120)
+
 
 #label4
 time_min_label = Label(widget, text="mins", font=("poppins", 10))
-time_min_label.place(x=190, y=135)
+time_min_label.place(x=200, y=135)
 
 #creating the notif button
 #fg - color to render text
@@ -118,5 +126,4 @@ manage_button.place(x=30, y=250)
 widget.resizable(0,0)
 #infinite loop - runs as long as the window is not closed
 widget.mainloop()
-
 
