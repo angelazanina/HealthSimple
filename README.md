@@ -1,1 +1,1 @@
-# SimpleHealth
+# HealthSimple
