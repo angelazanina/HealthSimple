@@ -28,7 +28,6 @@ def get_info():
     get_ctgry = category.get()
     get_msg = msg.get()
     get_time = var.get()
-    print(get_time)
     
     #input validation
     if get_ctgry =="" or get_msg == "" or get_time =="":
@@ -91,7 +90,6 @@ time_label = Label(widget, text="Set Time", font=("poppins", 10, 'bold'))
 time_label.place(x=20, y=135)
 
 #entry3
-#time1 = Entry(widget, width="5", font=("poppins", 10))
 def change(var):
     time1 = int(var)
 var = DoubleVar()
