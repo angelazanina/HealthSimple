@@ -8,7 +8,6 @@ import threading
 import multiprocessing
 import random
 
-
 #to help make GUI
 from tkinter import *
 from tkinter import messagebox
@@ -17,7 +16,6 @@ from tkinter.messagebox import askokcancel, showinfo, WARNING
 #imaging library
 #ImageTk module is like a support between PIL and Tkinter
 from PIL import Image, ImageTk
-
 
 #opening files
 motivFile = open("Motivation.txt", "r")
@@ -69,7 +67,8 @@ def stop():
 class notificationClass:
 
     def get_info(self):
-                
+        history_fo = open("notif_history.txt", "a")
+        
         #getting the user input
         ctgrs_l = []
         if (Motivation.get() == True):
@@ -82,34 +81,30 @@ class notificationClass:
         get_time = var.get()
         
         #input validation
-        if (ctgrs_l == []) or (get_time ==0 and Motivation.get()==TRUE):
-            messagebox.showerror("Oops!", "Looks like we're missing some info.")
-        else:
-            #time_sec = get_time*60
-            time_sec = 10
+        time_sec = get_time*60
 
-            joined_ctgrs = ",".join(ctgrs_l)
-            
-            active_notifs.append([joined_ctgrs, get_time])
+        joined_ctgrs = ",".join(ctgrs_l)
 
+        active_notifs.append([joined_ctgrs, get_time])
 
-            MotivationTimeInterval = time_sec
-            ActivityTimeInterval = 1800
-            HydrationTimeInterval = 1200
+        MotivationTimeInterval = time_sec
+        ActivityTimeInterval = 1800
+        HydrationTimeInterval = 1200
 
-            TimeReset = time.time()
+        TimeReset = time.time()
             
             
-            MotivationTimeEnd = MotivationTimeInterval + TimeReset
-            ActivityTimeEnd = ActivityTimeInterval + TimeReset
-            HydrationTimeEnd = HydrationTimeInterval + TimeReset
-            while (end==FALSE):
+        MotivationTimeEnd = MotivationTimeInterval + TimeReset
+        ActivityTimeEnd = ActivityTimeInterval + TimeReset
+        HydrationTimeEnd = HydrationTimeInterval + TimeReset
+        while (end==FALSE):
+            if Motivation.get()==TRUE:
                 if time.time() > MotivationTimeEnd :
-                    
+                        
                     #getting random string
                     motivIndex = random.randint(0, len(motivList)-1)
-                    
-                    
+                        
+                        
                     notification.notify(
                         title = 'Motivation',
                         message = motivList[motivIndex],
@@ -117,11 +112,12 @@ class notificationClass:
                         )
                     MotivationTimeEnd = MotivationTimeInterval + time.time()
 
+            if Activity.get()==TRUE:
                 if time.time() > ActivityTimeEnd :
-                    
+                        
                     #getting random string
                     activIndex = random.randint(0, len(activList)-1)
-                    
+                        
                     notification.notify(
                         title = 'Activity',
                         message = activList[activIndex],
@@ -129,11 +125,12 @@ class notificationClass:
                         )
                     ActivityTimeEnd = ActivityTimeInterval + time.time()
 
+            if Water.get()==TRUE:
                 if time.time() > HydrationTimeEnd :
-                    
+                        
                     #getting random string
                     waterIndex = random.randint(0, len(waterList)-1)
-                    
+                        
                     notification.notify(
                         title = 'Hydration',
                         message = waterList[waterIndex],
@@ -152,20 +149,30 @@ def run_thread():
     notificationClass()
 
 def confirm():
-    answer = askokcancel(
-        title='Confirmation',
-        message='Do you want to start your notifications?',
-        icon=WARNING)
+    ctgrs_l = []
+    if (Motivation.get() == True):
+        ctgrs_l.append("Motivation")
+    if (Water.get() ==True):
+        ctgrs_l.append("Water")
+    if (Activity.get() ==True):
+        ctgrs_l.append("Activity")
+    get_time = var.get()
+    if (ctgrs_l == []) or (get_time ==0 and Motivation.get()==TRUE):
+            messagebox.showerror("Oops!", "Looks like we're missing some info.")
+    else:
+        answer = askokcancel(
+            title='Confirmation',
+            message='Do you want to start your notifications?',
+            icon=WARNING)
 
-    if answer:
-        showinfo(
-            title='Confirming',
-            message='Your notifications have been enabled!',
-            )
-        run_thread()
+        if answer:
+            showinfo(
+                title='Confirming',
+                message='Your notifications have been enabled!',
+                )
+            run_thread()
             
 #---------------------------------------------------------------------
-
 #creating history window where you can delete stuff
 def open_history():
     mgmt_page = Tk()
@@ -209,8 +216,6 @@ def open_history():
             #making a label element for each element
             entryOption = Label(mgmt_page, text=entry[0] + "\t\t"+str(entry[1])+"\t\t\t", font=("poppins", 10))
             entryOption.place(x=55, y=ycoor)
-        
-        
     
 
 #creating the tk object which allows us to create/manipulate widget
@@ -313,7 +318,7 @@ notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins"
 
 notif_button.place(x=30, y=200)
 
-#creating the manage button
+#creating the history button
 manage_button = Button(widget, width=20, text="HISTORY", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#ffc052", relief="raised", activebackground = 'dark orange', activeforeground = 'white', command = open_history)
 manage_button.place(x=30, y=250)
 
