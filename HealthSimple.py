@@ -170,11 +170,14 @@ Water = IntVar()
 Activity = IntVar()
 
 def hide():
-    if Motivation == TRUE:
-        print("yes")
-        time1_slider.size = 100;
-    elif Motivation == FALSE:
-        time1_slider.size = 0;
+    if Motivation.get() == TRUE:
+        time1_slider.place(x=90, y=120)
+        time_label.place(x=20, y=135)
+        time_min_label.place(x=250, y=135)
+    elif Motivation.get() == FALSE:
+        time1_slider.place_forget()
+        time_label.place_forget()
+        time_min_label.place_forget()
 
 mb.menu.add_checkbutton ( label="Motivation", variable=Motivation, command=lambda:[hide(), change_text()])
 mb.menu.add_checkbutton ( label="Water", variable=Water, command = change_text)
@@ -192,6 +195,7 @@ msg.place(x=170, y=77, height=30)
 #label3
 time_label = Label(widget, text="Set Time", font=("poppins", 10, 'bold'))
 time_label.place(x=20, y=135)
+time_label.place_forget()
 
 #entry3
 def change(var):
@@ -199,10 +203,12 @@ def change(var):
 var = DoubleVar()
 time1_slider = Scale(widget, from_=0, to=120, orient = HORIZONTAL, length = 150, command=change, variable=var, activebackground = 'pink') 
 time1_slider.place(x=90, y=120)
+time1_slider.place_forget()
 
 #label4
 time_min_label = Label(widget, text="mins", font=("poppins", 10))
 time_min_label.place(x=250, y=135)
+time_min_label.place_forget()
 
 #creating the notif button
 #fg - color to render text
