@@ -158,8 +158,14 @@ def change_text():
         l.append("Activity")
     if (Water.get() == True):
         l.append("Water")
-    joined_l = ", ".join(l)
-    msg['text'] = joined_l
+    if (l==[]):
+        msg['text'] = 'Please Choose a Category'
+        msg.config(fg = 'red')
+    else:
+        joined_l = ", ".join(l)
+        msg['text'] = joined_l
+        msg.config(fg = 'black')
+
 mb=  Menubutton ( widget, text="Categories", relief=RAISED, activebackground = 'pink')
 mb.place(x=123, y=25)
 mb.menu  =  Menu ( mb, tearoff = 0 )
@@ -189,7 +195,7 @@ msg_label = Label(widget, text="Categories Chosen", font=("poppins", 10, 'bold')
 msg_label.place(x=20, y=80)
 
 #entry2
-msg = Label(widget, font=("poppins", 10), text = '')
+msg = Label(widget, font=("poppins", 10), text = 'Please Choose a Category', fg = 'red')
 msg.place(x=170, y=77, height=30)
 
 #label3
