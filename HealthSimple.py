@@ -5,6 +5,7 @@
 from plyer import notification
 import time
 import threading
+import multiprocessing
 
 #to help make GUI
 from tkinter import *
@@ -39,7 +40,8 @@ def get_info():
     if ctgrs_l == [] or get_time ==0:
         messagebox.showerror("Oops!", "Looks like we're missing some info.")
     else:
-        time_sec = get_time*60
+        #time_sec = get_time*60
+        time_sec = 10
         messagebox.showinfo("Notification set", "Confirm notification?")
 
         joined_ctgrs = ",".join(ctgrs_l)
@@ -55,26 +57,31 @@ def get_info():
         MotivationTimeEnd = MotivationTimeInterval + TimeReset
         ActivityTimeEnd = ActivityTimeInterval + TimeReset
         HydrationTimeEnd = HydrationTimeInterval + TimeReset
+        while (end==FALSE):
+            if time.time() > MotivationTimeEnd :
+                notification.notify(
+                    title = 'Motivation',
+                    message = 'You Got This!',
+                    timeout = 20
+                    )
+                MotivationTimeEnd = MotivationTimeInterval + time.time()
 
-        if time.time() > MotivationTimeEnd :
-            notification.notify(
-                title = 'Motivation', message = 'You Got This!', timeout = 20
-                )
-            MotivationTimeEnd = MotivationTimeInterval + time.time()
+            if time.time() > ActivityTimeEnd :
+                notification.notify(
+                    title = 'Activity',
+                    message = 'Get Up and Walk/Stretch',
+                    timeout = 20
+                    )
+                ActivityTimeEnd = ActivityTimeInterval + time.time()
 
-        if time.time() > ActivityTimeEnd :
-            notification.notify(
-                title = 'Activity', message = 'Get Up and Walk/Stretch', timeout = 20
-                )
-            ActivityTimeEnd = ActivityTimeInterval + time.time()
-
-        if time.time() > HydrationTimeEnd :
-            notification.notify(
-                title = 'Hydration', message = 'Drink Some Water', timeout = 20, app_icon = 'water.ico'
-                )
-            HydrationTimeEnd = HydrationTimeEnd + time.time()
-                
-        
+            if time.time() > HydrationTimeEnd :
+                notification.notify(
+                    title = 'Hydration',
+                    message = 'Drink Some Water',
+                    timeout = 20,
+                    app_icon = 'water.ico'
+                    )
+                HydrationTimeEnd = HydrationTimeEnd + time.time()        
 
 #def open_history():
     
@@ -110,7 +117,7 @@ def change_text():
         l.append("Water")
     joined_l = ", ".join(l)
     msg['text'] = joined_l
-mb=  Menubutton ( widget, text="Categories", relief=RAISED)
+mb=  Menubutton ( widget, text="Categories", relief=RAISED, activebackground = 'pink')
 mb.place(x=123, y=25)
 mb.menu  =  Menu ( mb, tearoff = 0 )
 mb["menu"]  =  mb.menu
@@ -140,7 +147,7 @@ time_label.place(x=20, y=135)
 def change(var):
     time1 = int(var)
 var = DoubleVar()
-time1_slider = Scale(widget, from_=0, to=120, orient = HORIZONTAL, length = 150, command=change, variable=var) 
+time1_slider = Scale(widget, from_=0, to=120, orient = HORIZONTAL, length = 150, command=change, variable=var, activebackground = 'pink') 
 time1_slider.place(x=90, y=120)
 
 #label4
@@ -156,18 +163,21 @@ time_min_label.place(x=250, y=135)
 #creating a new thread for the notification function
 #notif_thread = threading.Thread(target=get_info, args=[])
 
-notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#528DFF", relief="raised",
-                command=get_info)
+notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#528DFF", relief="raised", activeforeground = 'white', 
+                command=get_info, activebackground = 'medium blue')
 
 
 notif_button.place(x=30, y=200)
 
 #creating the manage button
-manage_button = Button(widget, width=20, text="MANAGE", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#ffc052", relief="raised")
+manage_button = Button(widget, width=20, text="MANAGE", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#ffc052", relief="raised", activebackground = 'dark orange', activeforeground = 'white')
 manage_button.place(x=30, y=250)
+
+#creating the stop button
+stop_button = Button(widget, width=20, text='STOP', font = ("poppins", 10, 'bold'), fg = 'white', bg = 'red' , relief = 'raised', activebackground = 'dark red', activeforeground = 'white', command = stop)
+stop_button.place (x=30, y=300)
 
 #makes the widget window resizable
 widget.resizable(0,0)
 #infinite loop - runs as long as the window is not closed
 widget.mainloop()
-
