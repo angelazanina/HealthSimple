@@ -222,7 +222,7 @@ widget = Tk()
 widget.title("HealthSimple")
 widget.geometry("550x350")
 
-logo = Image.open("Panda.png")
+logo = Image.open("junglePanda.png")
 tkLogo = ImageTk.PhotoImage(logo)  #making tkinter compatible photo
 
 #implementinga display box with our image
