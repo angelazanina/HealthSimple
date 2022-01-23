@@ -10,6 +10,7 @@ import multiprocessing
 #to help make GUI
 from tkinter import *
 from tkinter import messagebox
+from tkinter.messagebox import askokcancel, showinfo, WARNING
 
 #imaging library
 #ImageTk module is like a support between PIL and Tkinter
@@ -25,8 +26,18 @@ global end
 end = FALSE
 
 def stop():
-    global end
-    end = True
+    answer = askokcancel(
+        title='Confirmation',
+        message='Do you want to stop your notifications?',
+        icon=WARNING)
+
+    if answer:
+        showinfo(
+            title='Stopping',
+            message='Your notifications have been stopped!',
+            )
+        global end
+        end = True
 
 #functions
 #function to get info
@@ -54,7 +65,6 @@ class notificationClass:
         else:
             #time_sec = get_time*60
             time_sec = 10
-            #messagebox.showinfo("Notification set", "Confirm notification?")
 
             joined_ctgrs = ",".join(ctgrs_l)
             history_fo.write(joined_ctgrs+","+str(get_time)+"\n")
@@ -103,6 +113,20 @@ def run_thread():
     global end
     end = False
     notificationClass()
+
+def confirm():
+    answer = askokcancel(
+        title='Confirmation',
+        message='Do you want to start your notifications?',
+        icon=WARNING)
+
+    if answer:
+        showinfo(
+            title='Confirming',
+            message='Your notifications have been enabled!',
+            )
+        run_thread()
+            
 #---------------------------------------------------------------------
 #def open_history():
     
@@ -111,8 +135,6 @@ def run_thread():
 widget = Tk()
 widget.title("HealthSimple")
 widget.geometry("550x350")
-
-#root = Tk()
 
 logo = Image.open("Panda.png")
 tkLogo = ImageTk.PhotoImage(logo)  #making tkinter compatible photo
@@ -147,7 +169,13 @@ Motivation = IntVar()
 Water = IntVar()
 Activity = IntVar()
 
-mb.menu.add_checkbutton ( label="Motivation", variable=Motivation, command = change_text)
+def confirm():
+    if Motivation == TRUE:
+        time1_slider.pack()
+    elif Motivation == FALSE:
+        time1_slider_forget()
+
+mb.menu.add_checkbutton ( label="Motivation", variable=Motivation, command=lambda:[confirm(), change_text()])
 mb.menu.add_checkbutton ( label="Water", variable=Water, command = change_text)
 mb.menu.add_checkbutton ( label="Activity", variable=Activity, command = change_text)
 
@@ -185,7 +213,7 @@ time_min_label.place(x=250, y=135)
 #notif_thread = threading.Thread(target=get_info, args=[])
 
 notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#528DFF", relief="raised", activeforeground = 'white', 
-                command=run_thread, activebackground = 'medium blue')
+                command=confirm, activebackground = 'medium blue')
 
 
 notif_button.place(x=30, y=200)
