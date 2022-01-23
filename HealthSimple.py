@@ -169,13 +169,14 @@ Motivation = IntVar()
 Water = IntVar()
 Activity = IntVar()
 
-def confirm():
+def hide():
     if Motivation == TRUE:
-        time1_slider.pack()
+        print("yes")
+        time1_slider.size = 100;
     elif Motivation == FALSE:
-        time1_slider_forget()
+        time1_slider.size = 0;
 
-mb.menu.add_checkbutton ( label="Motivation", variable=Motivation, command=lambda:[confirm(), change_text()])
+mb.menu.add_checkbutton ( label="Motivation", variable=Motivation, command=lambda:[hide(), change_text()])
 mb.menu.add_checkbutton ( label="Water", variable=Water, command = change_text)
 mb.menu.add_checkbutton ( label="Activity", variable=Activity, command = change_text)
 
