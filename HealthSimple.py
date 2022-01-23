@@ -60,7 +60,7 @@ class notificationClass:
         get_time = var.get()
         
         #input validation
-        if ctgrs_l == [] or get_time ==0:
+        if (ctgrs_l == []) or (get_time ==0 and Motivation.get()==TRUE):
             messagebox.showerror("Oops!", "Looks like we're missing some info.")
         else:
             #time_sec = get_time*60
