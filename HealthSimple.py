@@ -137,7 +137,7 @@ class notificationClass:
                         timeout = 20,
                         app_icon = 'water.ico'
                         )
-                    HydrationTimeEnd = HydrationTimeEnd + time.time()        
+                    HydrationTimeEnd = HydrationTimeInterval + time.time()        
 
     def __init__(self):
         notifications_thread = threading.Thread(target=self.get_info)
