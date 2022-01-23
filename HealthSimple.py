@@ -311,18 +311,18 @@ time_min_label.place_forget()
 #creating a new thread for the notification function
 #notif_thread = threading.Thread(target=get_info, args=[])
 
-notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#528DFF", relief="raised", activeforeground = 'white', 
-                command=confirm, activebackground = 'medium blue')
+notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#47A8BD", relief="raised", activeforeground = 'white', 
+                command=confirm, activebackground = 'blue')
 
 
 notif_button.place(x=30, y=200)
 
 #creating the history button
-manage_button = Button(widget, width=20, text="HISTORY", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#ffc052", relief="raised", activebackground = 'dark orange', activeforeground = 'white', command = open_history)
+manage_button = Button(widget, width=20, text="HISTORY", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#FFD97D", relief="raised", activebackground = 'dark orange', activeforeground = 'white', command = open_history)
 manage_button.place(x=30, y=250)
 
 #creating the stop button
-stop_button = Button(widget, width=20, text='STOP', font = ("poppins", 10, 'bold'), fg = 'white', bg = 'red' , relief = 'raised', activebackground = 'dark red', activeforeground = 'white', command = stop)
+stop_button = Button(widget, width=20, text='STOP', font = ("poppins", 10, 'bold'), fg = 'white', bg = '#FAA0AA' , relief = 'raised', activebackground = 'deep pink', activeforeground = 'white', command = stop)
 stop_button.place (x=30, y=300)
 
 #makes the widget window resizable
