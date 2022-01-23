@@ -135,7 +135,6 @@ class notificationClass:
                         title = 'Hydration',
                         message = waterList[waterIndex],
                         timeout = 20,
-                        app_icon = 'water.ico'
                         )
                     HydrationTimeEnd = HydrationTimeInterval + time.time()        
 
