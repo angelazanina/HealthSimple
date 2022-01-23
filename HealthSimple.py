@@ -20,69 +20,90 @@ history_fo = open("notif_history.txt", "w")
 history_fo.write("Category,Message,Time\n")
 history_fo.close()
 
+#global variable to determind state
+global end
+end = FALSE
+
+def stop():
+    global end
+    end = True
+
 #functions
 #function to get info
-def get_info():
-    history_fo = open("notif_history.txt", "a")
-    
-    #getting the user input
-    ctgrs_l = []
-    if (Motivation.get() == True):
-        ctgrs_l.append("Motivation")
-    if (Water.get() ==True):
-        ctgrs_l.append("Water")
-    if (Activity.get() ==True):
-        ctgrs_l.append("Activity")
-    get_ctgry = ctgrs_l
-    get_time = var.get()
-    
-    #input validation
-    if ctgrs_l == [] or get_time ==0:
-        messagebox.showerror("Oops!", "Looks like we're missing some info.")
-    else:
-        #time_sec = get_time*60
-        time_sec = 10
-        messagebox.showinfo("Notification set", "Confirm notification?")
 
-        joined_ctgrs = ",".join(ctgrs_l)
-        history_fo.write(joined_ctgrs+","+str(get_time)+"\n")
+#---------------------------------------------------------------------
+class notificationClass:
 
-        MotivationTimeInterval = time_sec
-        ActivityTimeInterval = 1800
-        HydrationTimeInterval = 1200
-
-        TimeReset = time.time()
-        end = FALSE
+    def get_info(self):
+        history_fo = open("notif_history.txt", "a")
         
-        MotivationTimeEnd = MotivationTimeInterval + TimeReset
-        ActivityTimeEnd = ActivityTimeInterval + TimeReset
-        HydrationTimeEnd = HydrationTimeInterval + TimeReset
-        while (end==FALSE):
-            if time.time() > MotivationTimeEnd :
-                notification.notify(
-                    title = 'Motivation',
-                    message = 'You Got This!',
-                    timeout = 20
-                    )
-                MotivationTimeEnd = MotivationTimeInterval + time.time()
+        #getting the user input
+        ctgrs_l = []
+        if (Motivation.get() == True):
+            ctgrs_l.append("Motivation")
+        if (Water.get() ==True):
+            ctgrs_l.append("Water")
+        if (Activity.get() ==True):
+            ctgrs_l.append("Activity")
+        get_ctgry = ctgrs_l
+        get_time = var.get()
+        
+        #input validation
+        if ctgrs_l == [] or get_time ==0:
+            messagebox.showerror("Oops!", "Looks like we're missing some info.")
+        else:
+            #time_sec = get_time*60
+            time_sec = 10
+            #messagebox.showinfo("Notification set", "Confirm notification?")
 
-            if time.time() > ActivityTimeEnd :
-                notification.notify(
-                    title = 'Activity',
-                    message = 'Get Up and Walk/Stretch',
-                    timeout = 20
-                    )
-                ActivityTimeEnd = ActivityTimeInterval + time.time()
+            joined_ctgrs = ",".join(ctgrs_l)
+            history_fo.write(joined_ctgrs+","+str(get_time)+"\n")
 
-            if time.time() > HydrationTimeEnd :
-                notification.notify(
-                    title = 'Hydration',
-                    message = 'Drink Some Water',
-                    timeout = 20,
-                    app_icon = 'water.ico'
-                    )
-                HydrationTimeEnd = HydrationTimeEnd + time.time()        
+            MotivationTimeInterval = time_sec
+            ActivityTimeInterval = 1800
+            HydrationTimeInterval = 1200
 
+            TimeReset = time.time()
+            
+            
+            MotivationTimeEnd = MotivationTimeInterval + TimeReset
+            ActivityTimeEnd = ActivityTimeInterval + TimeReset
+            HydrationTimeEnd = HydrationTimeInterval + TimeReset
+            while (end==FALSE):
+                if time.time() > MotivationTimeEnd :
+                    notification.notify(
+                        title = 'Motivation',
+                        message = 'You Got This!',
+                        timeout = 20
+                        )
+                    MotivationTimeEnd = MotivationTimeInterval + time.time()
+
+                if time.time() > ActivityTimeEnd :
+                    notification.notify(
+                        title = 'Activity',
+                        message = 'Get Up and Walk/Stretch',
+                        timeout = 20
+                        )
+                    ActivityTimeEnd = ActivityTimeInterval + time.time()
+
+                if time.time() > HydrationTimeEnd :
+                    notification.notify(
+                        title = 'Hydration',
+                        message = 'Drink Some Water',
+                        timeout = 20,
+                        app_icon = 'water.ico'
+                        )
+                    HydrationTimeEnd = HydrationTimeEnd + time.time()        
+
+    def __init__(self):
+        notifications_thread = threading.Thread(target=self.get_info)
+        notifications_thread.start()
+
+def run_thread():
+    global end
+    end = False
+    notificationClass()
+#---------------------------------------------------------------------
 #def open_history():
     
 
@@ -164,7 +185,7 @@ time_min_label.place(x=250, y=135)
 #notif_thread = threading.Thread(target=get_info, args=[])
 
 notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#528DFF", relief="raised", activeforeground = 'white', 
-                command=get_info, activebackground = 'medium blue')
+                command=run_thread, activebackground = 'medium blue')
 
 
 notif_button.place(x=30, y=200)
