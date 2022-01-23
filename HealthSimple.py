@@ -6,6 +6,8 @@ from plyer import notification
 import time
 import threading
 import multiprocessing
+import random
+
 
 #to help make GUI
 from tkinter import *
@@ -16,14 +18,35 @@ from tkinter.messagebox import askokcancel, showinfo, WARNING
 #ImageTk module is like a support between PIL and Tkinter
 from PIL import Image, ImageTk
 
-#file to save all the history
-history_fo = open("notif_history.txt", "w")
-history_fo.write("Category,Message,Time\n")
-history_fo.close()
+
+#opening files
+motivFile = open("Motivation.txt", "r")
+waterFile = open("water.txt", "r")
+activFile = open("activity.txt", "r")
+
+#getting strings and storing in lists
+motivList = []
+waterList = []
+activList = []
+
+for line in motivFile:
+    motivList.append(line)
+for line in waterFile:
+    waterList.append(line)
+for line in activFile:
+    activList.append(line)
+    
+#closing files
+motivFile.close()
+waterFile.close()
+activFile.close()
 
 #global variable to determind state
 global end
 end = FALSE
+
+#global var to keep track of the notifications set
+active_notifs = []
 
 def stop():
     answer = askokcancel(
@@ -46,8 +69,7 @@ def stop():
 class notificationClass:
 
     def get_info(self):
-        history_fo = open("notif_history.txt", "a")
-        
+                
         #getting the user input
         ctgrs_l = []
         if (Motivation.get() == True):
@@ -67,7 +89,9 @@ class notificationClass:
             time_sec = 10
 
             joined_ctgrs = ",".join(ctgrs_l)
-            history_fo.write(joined_ctgrs+","+str(get_time)+"\n")
+            
+            active_notifs.append([joined_ctgrs, get_time])
+
 
             MotivationTimeInterval = time_sec
             ActivityTimeInterval = 1800
@@ -81,25 +105,38 @@ class notificationClass:
             HydrationTimeEnd = HydrationTimeInterval + TimeReset
             while (end==FALSE):
                 if time.time() > MotivationTimeEnd :
+                    
+                    #getting random string
+                    motivIndex = random.randint(0, len(motivList)-1)
+                    
+                    
                     notification.notify(
                         title = 'Motivation',
-                        message = 'You Got This!',
+                        message = motivList[motivIndex],
                         timeout = 20
                         )
                     MotivationTimeEnd = MotivationTimeInterval + time.time()
 
                 if time.time() > ActivityTimeEnd :
+                    
+                    #getting random string
+                    activIndex = random.randint(0, len(activList)-1)
+                    
                     notification.notify(
                         title = 'Activity',
-                        message = 'Get Up and Walk/Stretch',
+                        message = activList[activIndex],
                         timeout = 20
                         )
                     ActivityTimeEnd = ActivityTimeInterval + time.time()
 
                 if time.time() > HydrationTimeEnd :
+                    
+                    #getting random string
+                    waterIndex = random.randint(0, len(waterList)-1)
+                    
                     notification.notify(
                         title = 'Hydration',
-                        message = 'Drink Some Water',
+                        message = waterList[waterIndex],
                         timeout = 20,
                         app_icon = 'water.ico'
                         )
@@ -128,7 +165,52 @@ def confirm():
         run_thread()
             
 #---------------------------------------------------------------------
-#def open_history():
+
+#creating history window where you can delete stuff
+def open_history():
+    mgmt_page = Tk()
+    mgmt_page.title("HealthSimple - Manage Notifications")
+    
+    length=150+(len(active_notifs)*35)
+    
+    #geometry y exis should depend on the number of notifications active
+    mgmt_page.geometry("550x"+str(length))
+    
+    mgmt_page.configure(bg="#bfe7ff")
+    
+    #header labels
+    header = Label(mgmt_page, text="Categories:\t\tTime Set (mins):\t\t", font=("poppins", 10, "bold"))
+    header.place(x=55, y=70)
+    
+    #title label
+    ctgry_label = Label(mgmt_page, text="Notification History", font=("poppins", 12, 'bold'), bg="#bfe7ff")
+    ctgry_label.place(x=183, y=25)
+    
+        
+    count = 0
+    ycoor = 70
+    
+    for entry in active_notifs:
+        count +=1
+            
+        ycoor += 35
+        
+        if len(entry[0]) > 20:
+            #making a label element for each element
+            entryOption = Label(mgmt_page, text=entry[0] + "\t"+str(entry[1])+"\t\t\t", font=("poppins", 10))
+            entryOption.place(x=55, y=ycoor)
+        
+        elif len(entry[0]) < 9:
+            #making a label element for each element
+            entryOption = Label(mgmt_page, text=entry[0] + "\t\t\t"+str(entry[1])+"\t\t\t", font=("poppins", 10))
+            entryOption.place(x=55, y=ycoor)
+        
+        else:
+            #making a label element for each element
+            entryOption = Label(mgmt_page, text=entry[0] + "\t\t"+str(entry[1])+"\t\t\t", font=("poppins", 10))
+            entryOption.place(x=55, y=ycoor)
+        
+        
     
 
 #creating the tk object which allows us to create/manipulate widget
@@ -232,7 +314,7 @@ notif_button = Button(widget, width=20, text="SET NOTIFICATION", font=("poppins"
 notif_button.place(x=30, y=200)
 
 #creating the manage button
-manage_button = Button(widget, width=20, text="MANAGE", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#ffc052", relief="raised", activebackground = 'dark orange', activeforeground = 'white')
+manage_button = Button(widget, width=20, text="HISTORY", font=("poppins", 10, 'bold'), fg="#ffffff", bg="#ffc052", relief="raised", activebackground = 'dark orange', activeforeground = 'white', command = open_history)
 manage_button.place(x=30, y=250)
 
 #creating the stop button
