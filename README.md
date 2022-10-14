@@ -21,3 +21,8 @@ There are several other features that HealthSimple is hoping to implement, inclu
 
 <img width="562" alt="Screen Shot 2022-10-13 at 20 47 00" src="https://user-images.githubusercontent.com/44797747/195737354-e255167f-5526-4f24-9ed5-3febabacae60.png">
 <img width="561" alt="Screen Shot 2022-10-13 at 20 47 20" src="https://user-images.githubusercontent.com/44797747/195737387-2137c4c2-2504-46bb-b935-c46da2f8d69c.png">
+
+| <img width="561" alt="Screen Shot 2022-10-13 at 20 47 20" src="https://user-images.githubusercontent.com/44797747/195737387-2137c4c2-2504-46bb-b935-c46da2f8d69c.png">  | <img width="562" alt="Screen Shot 2022-10-13 at 20 47 00" src="https://user-images.githubusercontent.com/44797747/195737354-e255167f-5526-4f24-9ed5-3febabacae60.png"> |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
