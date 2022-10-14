@@ -1,4 +1,5 @@
 # HealthSimple
+https://devpost.com/software/healthsimple-hlp28w
 
 ### Inspiration
 Since the beginning of the COVID-19 pandemic, WFH and online school has fatigued us all. As remote learners ourselves, our team wanted to create a hack that could help digital workers and students improve mental and physical health. While brainstorming for solutions, our team realized that we often forget to take breaks from staring at our screens and sitting for prolonged periods of time. We also identified "Zoom fatigue" as a common problem among remote workers and students. As such, we decided to create a wellness widget for desktops.
